@@ -1,0 +1,19 @@
+-- CreateEnum
+CREATE TYPE "ProductStatus" AS ENUM ('ACTIVE', 'INACTIVE');
+
+-- CreateTable
+CREATE TABLE "products" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "unit" TEXT NOT NULL,
+    "price" DECIMAL(12,2) NOT NULL,
+    "status" "ProductStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "products_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "products_name_key" ON "products"("name");

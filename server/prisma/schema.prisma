@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users           User[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rolePermissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           Int      @id @default(autoincrement())
+  roleId       Int
+  permissionId Int
+  createdAt    DateTime @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  roleId Int
+
+  firstName String
+
+  lastName String
+
+  email String @unique
+
+  password String
+
+  phone String?
+
+  status UserStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@index([roleId])
+  @@map("users")
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Product {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  description String?
+  unit        String
+  price       Decimal       @db.Decimal(12, 2)
+  status      ProductStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  inventory Inventory?
+
+  @@map("products")
+}
+
+model Inventory {
+  id           Int      @id @default(autoincrement())
+  productId    Int      @unique
+  quantity     Decimal  @db.Decimal(12, 2)
+  minimumStock Decimal  @db.Decimal(12, 2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("inventory")
+
+  movements StockMovement[]
+}
+
+model StockMovement {
+  id          Int                @id @default(autoincrement())
+  inventoryId Int
+  type        StockMovementType
+  reason      StockMovementReason
+  quantity    Decimal            @db.Decimal(12, 2)
+  reference   String?
+  notes       String?
+  createdAt   DateTime           @default(now())
+
+  inventory Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
+
+  @@index([inventoryId])
+  @@index([type])
+  @@index([reason])
+  @@map("stock_movements")
+}
+
+
+enum StockMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+enum StockMovementReason {
+  PURCHASE
+  SALE
+  DAMAGE
+  RETURN
+  MANUAL_ADJUSTMENT
+}
+

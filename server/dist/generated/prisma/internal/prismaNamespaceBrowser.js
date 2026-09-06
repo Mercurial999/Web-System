@@ -43,9 +43,12 @@ export const ModelName = {
     Permission: 'Permission',
     RolePermission: 'RolePermission',
     User: 'User',
+    Customer: 'Customer',
     Product: 'Product',
     Inventory: 'Inventory',
-    StockMovement: 'StockMovement'
+    StockMovement: 'StockMovement',
+    Delivery: 'Delivery',
+    DeliveryItem: 'DeliveryItem'
 };
 /*
  * Enums
@@ -88,6 +91,16 @@ export const UserScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
+export const CustomerScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    address: 'address',
+    contactPerson: 'contactPerson',
+    phone: 'phone',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
 export const ProductScalarFieldEnum = {
     id: 'id',
     name: 'name',
@@ -115,6 +128,21 @@ export const StockMovementScalarFieldEnum = {
     reference: 'reference',
     notes: 'notes',
     createdAt: 'createdAt'
+};
+export const DeliveryScalarFieldEnum = {
+    id: 'id',
+    customerId: 'customerId',
+    deliveryDate: 'deliveryDate',
+    status: 'status',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const DeliveryItemScalarFieldEnum = {
+    id: 'id',
+    deliveryId: 'deliveryId',
+    productId: 'productId',
+    quantity: 'quantity'
 };
 export const SortOrder = {
     asc: 'asc',

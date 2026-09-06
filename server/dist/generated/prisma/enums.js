@@ -11,6 +11,10 @@ export const UserStatus = {
     ACTIVE: 'ACTIVE',
     INACTIVE: 'INACTIVE'
 };
+export const CustomerStatus = {
+    ACTIVE: 'ACTIVE',
+    INACTIVE: 'INACTIVE'
+};
 export const ProductStatus = {
     ACTIVE: 'ACTIVE',
     INACTIVE: 'INACTIVE'
@@ -26,4 +30,9 @@ export const StockMovementReason = {
     DAMAGE: 'DAMAGE',
     RETURN: 'RETURN',
     MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT'
+};
+export const DeliveryStatus = {
+    DRAFT: 'DRAFT',
+    COMPLETED: 'COMPLETED',
+    CANCELLED: 'CANCELLED'
 };

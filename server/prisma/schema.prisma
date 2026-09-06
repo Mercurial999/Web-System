@@ -12,6 +12,35 @@ enum UserStatus {
   INACTIVE
 }
 
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum StockMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+enum StockMovementReason {
+  PURCHASE
+  SALE
+  DAMAGE
+  RETURN
+  MANUAL_ADJUSTMENT
+}
+
+enum DeliveryStatus {
+  DRAFT
+  COMPLETED
+  CANCELLED
+}
 
 model Role {
   id          Int      @id @default(autoincrement())
@@ -59,19 +88,15 @@ model User {
   roleId Int
 
   firstName String
+  lastName  String
 
-  lastName String
-
-  email String @unique
-
+  email    String  @unique
   password String
-
-  phone String?
+  phone    String?
 
   status UserStatus @default(ACTIVE)
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
   role Role @relation(fields: [roleId], references: [id])
@@ -80,9 +105,22 @@ model User {
   @@map("users")
 }
 
-enum ProductStatus {
-  ACTIVE
-  INACTIVE
+model Customer {
+  id            Int            @id @default(autoincrement())
+  name          String
+  address       String
+  contactPerson String?
+  phone         String?
+  status        CustomerStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deliveries Delivery[]
+
+  @@index([name])
+  @@index([status])
+  @@map("customers")
 }
 
 model Product {
@@ -92,38 +130,42 @@ model Product {
   unit        String
   price       Decimal       @db.Decimal(12, 2)
   status      ProductStatus @default(ACTIVE)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
 
-  inventory Inventory?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  inventory     Inventory?
+  deliveryItems DeliveryItem[]
 
   @@map("products")
 }
 
 model Inventory {
-  id           Int      @id @default(autoincrement())
-  productId    Int      @unique
-  quantity     Decimal  @db.Decimal(12, 2)
-  minimumStock Decimal  @db.Decimal(12, 2)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id           Int     @id @default(autoincrement())
+  productId    Int     @unique
+  quantity     Decimal @db.Decimal(12, 2)
+  minimumStock Decimal @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   product Product @relation(fields: [productId], references: [id])
 
-  @@map("inventory")
-
   movements StockMovement[]
+
+  @@map("inventory")
 }
 
 model StockMovement {
-  id          Int                @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   inventoryId Int
   type        StockMovementType
   reason      StockMovementReason
-  quantity    Decimal            @db.Decimal(12, 2)
+  quantity    Decimal             @db.Decimal(12, 2)
   reference   String?
   notes       String?
-  createdAt   DateTime           @default(now())
+
+  createdAt DateTime @default(now())
 
   inventory Inventory @relation(fields: [inventoryId], references: [id], onDelete: Cascade)
 
@@ -133,18 +175,36 @@ model StockMovement {
   @@map("stock_movements")
 }
 
+model Delivery {
+  id           Int            @id @default(autoincrement())
+  customerId   Int
+  deliveryDate DateTime
+  status       DeliveryStatus @default(DRAFT)
+  notes        String?
 
-enum StockMovementType {
-  IN
-  OUT
-  ADJUSTMENT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customer Customer       @relation(fields: [customerId], references: [id])
+  items    DeliveryItem[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([deliveryDate])
+  @@map("deliveries")
 }
 
-enum StockMovementReason {
-  PURCHASE
-  SALE
-  DAMAGE
-  RETURN
-  MANUAL_ADJUSTMENT
-}
+model DeliveryItem {
+  id         Int @id @default(autoincrement())
+  deliveryId Int
+  productId  Int
+  quantity   Int
 
+  delivery Delivery @relation(fields: [deliveryId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
+
+  @@unique([deliveryId, productId])
+  @@index([deliveryId])
+  @@index([productId])
+  @@map("delivery_items")
+}

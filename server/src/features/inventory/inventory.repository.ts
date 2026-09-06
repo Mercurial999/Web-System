@@ -57,6 +57,39 @@ export class InventoryRepository {
   return result[0];
 }
 
+async findForUpdateByProductId(
+  productId: number,
+  client: Prisma.TransactionClient = prisma,
+) {
+  const result = await client.$queryRaw<
+    Array<{
+      id: number;
+      productId: number;
+      quantity: Prisma.Decimal;
+      minimumStock: Prisma.Decimal;
+      createdAt: Date;
+      updatedAt: Date;
+    }>
+  >`
+    SELECT
+      id,
+      "productId",
+      quantity,
+      "minimumStock",
+      "createdAt",
+      "updatedAt"
+    FROM "inventory"
+    WHERE "productId" = ${productId}
+    FOR UPDATE
+  `;
+
+  if (result.length === 0) {
+    return null;
+  }
+
+  return result[0];
+}
+
   async findByProductId(productId: number) {
     return prisma.inventory.findUnique({
       where: {

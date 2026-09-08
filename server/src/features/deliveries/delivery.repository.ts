@@ -61,6 +61,50 @@ export class DeliveryRepository {
     });
   }
 
+    async addItem(
+    deliveryId: number,
+    data: {
+      productId: number;
+      quantity: number;
+    },
+  ) {
+    return prisma.deliveryItem.create({
+      data: {
+        deliveryId,
+        productId: data.productId,
+        quantity: data.quantity,
+      },
+      include: {
+        product: true,
+      },
+    });
+  }
+
+   async updateItem(
+    itemId: number,
+    data: {
+      quantity: number;
+    },
+  ) {
+    return prisma.deliveryItem.update({
+      where: {
+        id: itemId,
+      },
+      data,
+      include: {
+        product: true,
+      },
+    });
+  }
+
+    async deleteItem(itemId: number) {
+    return prisma.deliveryItem.delete({
+      where: {
+        id: itemId,
+      },
+    });
+  }
+
   async update(
     id: number,
     data: {
@@ -108,7 +152,43 @@ export class DeliveryRepository {
   });
 }
 
+async findForUpdate(
+  id: number,
+  client: Prisma.TransactionClient = prisma,
+) {
+  const result = await client.$queryRaw<
+    Array<{
+      id: number;
+      customerId: number;
+      deliveryDate: Date;
+      status: "DRAFT" | "COMPLETED" | "CANCELLED";
+      notes: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    }>
+  >`
+    SELECT
+      id,
+      "customerId",
+      "deliveryDate",
+      status,
+      notes,
+      "createdAt",
+      "updatedAt"
+    FROM "deliveries"
+    WHERE id = ${id}
+    FOR UPDATE
+  `;
+
+  if (result.length === 0) {
+    return null;
+  }
+
+  return result[0];
 }
+
+}
+
 
 
 export const deliveryRepository = new DeliveryRepository();

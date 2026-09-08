@@ -117,11 +117,11 @@ async findForUpdateByProductId(
   async update(
   id: number,
   data: {
-    quantity?: number;
-    minimumStock?: number;
+    quantity?: number | Prisma.Decimal;
+    minimumStock?: number | Prisma.Decimal;
   },
-  client: Prisma.TransactionClient = prisma
-) {
+  client: Prisma.TransactionClient = prisma,
+){
   return client.inventory.update({
     where: {
       id,

@@ -13,6 +13,18 @@ export class StockMovementController {
             next(error);
         }
     }
+    async getAll(req, res, next) {
+        try {
+            const movements = await stockMovementService.getMovements();
+            res.status(200).json({
+                success: true,
+                data: movements,
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    }
     async getById(req, res, next) {
         try {
             const id = Number(req.params.id);

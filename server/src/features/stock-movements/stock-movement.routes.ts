@@ -15,6 +15,15 @@ import {
 const router = Router();
 
 router.get(
+  "/",
+  authenticate,
+  authorize("inventory.read"),
+  stockMovementController.getAll.bind(
+    stockMovementController
+  )
+);
+
+router.get(
   "/inventory/:inventoryId",
   authenticate,
   authorize("inventory.read"),

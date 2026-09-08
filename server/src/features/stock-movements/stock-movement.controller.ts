@@ -21,6 +21,24 @@ export class StockMovementController {
     }
   }
 
+  async getAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const movements =
+      await stockMovementService.getMovements();
+
+    res.status(200).json({
+      success: true,
+      data: movements,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
   async getById(
   req: Request,
   res: Response,

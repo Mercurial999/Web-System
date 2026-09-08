@@ -111,6 +111,10 @@ export class StockMovementService {
   return movement;  
 }
 
+async getMovements() {
+  return stockMovementRepository.findAll();
+}
+
   async getMovementById(id: number) {
   const movement =
     await stockMovementRepository.findById(id);

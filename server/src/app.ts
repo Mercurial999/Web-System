@@ -7,6 +7,7 @@ import productRoutes from "./features/products/product.routes.js";
 import stockMovementRoutes from "./features/stock-movements/stock-movement.routes.js";
 import customerRoutes from "./features/customers/customer.routes.js";
 import deliveryRoutes from "./features/deliveries/delivery.routes.js";
+import orderRoutes from "./features/orders/order.routes.js";
 
 import { errorMiddleware } from "./middleware/error.middleware.js";
 
@@ -31,6 +32,8 @@ app.use("/api/stock-movements", stockMovementRoutes);
 app.use("/api/customers", customerRoutes);
 
 app.use("/api/deliveries", deliveryRoutes);
+
+app.use("/api/orders", orderRoutes);
 
 
 

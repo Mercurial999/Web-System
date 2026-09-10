@@ -7,6 +7,7 @@ export class DeliveryRepository {
             },
             include: {
                 customer: true,
+                order: true,
             },
         });
     }
@@ -17,6 +18,7 @@ export class DeliveryRepository {
             },
             include: {
                 customer: true,
+                order: true,
                 items: {
                     include: {
                         product: true,
@@ -25,9 +27,10 @@ export class DeliveryRepository {
             },
         });
     }
-    async create(data) {
+    async createFromOrder(data) {
         return prisma.delivery.create({
             data: {
+                orderId: data.orderId,
                 customerId: data.customerId,
                 deliveryDate: data.deliveryDate,
                 notes: data.notes,
@@ -37,52 +40,7 @@ export class DeliveryRepository {
             },
             include: {
                 customer: true,
-                items: {
-                    include: {
-                        product: true,
-                    },
-                },
-            },
-        });
-    }
-    async addItem(deliveryId, data) {
-        return prisma.deliveryItem.create({
-            data: {
-                deliveryId,
-                productId: data.productId,
-                quantity: data.quantity,
-            },
-            include: {
-                product: true,
-            },
-        });
-    }
-    async updateItem(itemId, data) {
-        return prisma.deliveryItem.update({
-            where: {
-                id: itemId,
-            },
-            data,
-            include: {
-                product: true,
-            },
-        });
-    }
-    async deleteItem(itemId) {
-        return prisma.deliveryItem.delete({
-            where: {
-                id: itemId,
-            },
-        });
-    }
-    async update(id, data) {
-        return prisma.delivery.update({
-            where: {
-                id,
-            },
-            data,
-            include: {
-                customer: true,
+                order: true,
                 items: {
                     include: {
                         product: true,
@@ -111,18 +69,18 @@ export class DeliveryRepository {
     }
     async findForUpdate(id, client = prisma) {
         const result = await client.$queryRaw `
-    SELECT
-      id,
-      "customerId",
-      "deliveryDate",
-      status,
-      notes,
-      "createdAt",
-      "updatedAt"
-    FROM "deliveries"
-    WHERE id = ${id}
-    FOR UPDATE
-  `;
+      SELECT
+        id,
+        "customerId",
+        "deliveryDate",
+        status,
+        notes,
+        "createdAt",
+        "updatedAt"
+      FROM "deliveries"
+      WHERE id = ${id}
+      FOR UPDATE
+    `;
         if (result.length === 0) {
             return null;
         }

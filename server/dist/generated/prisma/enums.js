@@ -31,6 +31,12 @@ export const StockMovementReason = {
     RETURN: 'RETURN',
     MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT'
 };
+export const OrderStatus = {
+    PENDING: 'PENDING',
+    CONFIRMED: 'CONFIRMED',
+    COMPLETED: 'COMPLETED',
+    CANCELLED: 'CANCELLED'
+};
 export const DeliveryStatus = {
     DRAFT: 'DRAFT',
     COMPLETED: 'COMPLETED',

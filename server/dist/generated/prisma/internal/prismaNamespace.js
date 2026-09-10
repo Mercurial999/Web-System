@@ -75,6 +75,8 @@ export const ModelName = {
     Product: 'Product',
     Inventory: 'Inventory',
     StockMovement: 'StockMovement',
+    Order: 'Order',
+    OrderItem: 'OrderItem',
     Delivery: 'Delivery',
     DeliveryItem: 'DeliveryItem'
 };
@@ -157,8 +159,26 @@ export const StockMovementScalarFieldEnum = {
     notes: 'notes',
     createdAt: 'createdAt'
 };
+export const OrderScalarFieldEnum = {
+    id: 'id',
+    customerId: 'customerId',
+    orderDate: 'orderDate',
+    status: 'status',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const OrderItemScalarFieldEnum = {
+    id: 'id',
+    orderId: 'orderId',
+    productId: 'productId',
+    quantity: 'quantity',
+    unitPrice: 'unitPrice',
+    subtotal: 'subtotal'
+};
 export const DeliveryScalarFieldEnum = {
     id: 'id',
+    orderId: 'orderId',
     customerId: 'customerId',
     deliveryDate: 'deliveryDate',
     status: 'status',
@@ -170,7 +190,9 @@ export const DeliveryItemScalarFieldEnum = {
     id: 'id',
     deliveryId: 'deliveryId',
     productId: 'productId',
-    quantity: 'quantity'
+    quantity: 'quantity',
+    unitPrice: 'unitPrice',
+    subtotal: 'subtotal'
 };
 export const SortOrder = {
     asc: 'asc',

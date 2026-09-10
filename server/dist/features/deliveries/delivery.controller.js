@@ -23,40 +23,6 @@ export class DeliveryController {
             data: delivery,
         });
     }
-    async addDeliveryItem(req, res) {
-        const deliveryId = Number(req.params.id);
-        const item = await this.deliveryService.addDeliveryItem(deliveryId, req.body);
-        return res.status(201).json({
-            success: true,
-            data: item,
-        });
-    }
-    async updateDeliveryItem(req, res) {
-        const deliveryId = Number(req.params.id);
-        const itemId = Number(req.params.itemId);
-        const item = await this.deliveryService.updateDeliveryItem(deliveryId, itemId, req.body);
-        return res.status(200).json({
-            success: true,
-            data: item,
-        });
-    }
-    async deleteDeliveryItem(req, res) {
-        const deliveryId = Number(req.params.id);
-        const itemId = Number(req.params.itemId);
-        const item = await this.deliveryService.deleteDeliveryItem(deliveryId, itemId);
-        return res.status(200).json({
-            success: true,
-            data: item,
-        });
-    }
-    async updateDelivery(req, res) {
-        const id = Number(req.params.id);
-        const delivery = await this.deliveryService.updateDelivery(id, req.body);
-        return res.status(200).json({
-            success: true,
-            data: delivery,
-        });
-    }
     async cancelDelivery(req, res) {
         const id = Number(req.params.id);
         const delivery = await this.deliveryService.cancelDelivery(id);

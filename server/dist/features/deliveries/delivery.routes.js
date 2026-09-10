@@ -1,13 +1,11 @@
 import { Router } from "express";
 import { deliveryController } from "./delivery.controller.js";
+import { validate } from "../../middleware/validation.middleware.js";
+import { createDeliverySchema } from "./delivery.validation.js";
 const router = Router();
 router.get("/", deliveryController.getDeliveries.bind(deliveryController));
 router.get("/:id", deliveryController.getDeliveryById.bind(deliveryController));
-router.post("/", deliveryController.createDelivery.bind(deliveryController));
-router.post("/:id/items", deliveryController.addDeliveryItem.bind(deliveryController));
-router.patch("/:id/items/:itemId", deliveryController.updateDeliveryItem.bind(deliveryController));
-router.delete("/:id/items/:itemId", deliveryController.deleteDeliveryItem.bind(deliveryController));
-router.patch("/:id", deliveryController.updateDelivery.bind(deliveryController));
+router.post("/", validate(createDeliverySchema), deliveryController.createDelivery.bind(deliveryController));
 router.patch("/:id/cancel", deliveryController.cancelDelivery.bind(deliveryController));
 router.patch("/:id/complete", deliveryController.completeDelivery.bind(deliveryController));
 export default router;

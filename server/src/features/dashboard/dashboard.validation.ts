@@ -25,6 +25,13 @@ export const dashboardOrdersQuerySchema = z.object({
     .string()
     .date()
     .optional(),
+
+  limit: z.coerce
+  .number()
+  .int()
+  .positive()
+  .max(100)
+  .optional(),
 });
 
 export const dashboardDeliveriesQuerySchema = z.object({
@@ -51,4 +58,11 @@ export const dashboardDeliveriesQuerySchema = z.object({
     .string()
     .date()
     .optional(),
+
+  limit: z.coerce
+  .number()
+  .int()
+  .positive()
+  .max(100)
+  .optional(),
 });

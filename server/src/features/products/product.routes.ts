@@ -2,13 +2,17 @@ import { Router } from "express";
 
 import { ProductController } from "./product.controller.js";
 
+
 import { authenticate } from "../../middleware/auth.middleware.js";
 import { authorize } from "../../middleware/permission.middleware.js";
 import { validate } from "../../middleware/validation.middleware.js";
+import { validateQuery } from "../../middleware/validate-query.middleware.js";
+
 
 import {
   createProductSchema,
   updateProductSchema,
+  productQuerySchema,
 } from "./product.validation.js";
 
 const router = Router();
@@ -19,6 +23,7 @@ router.get(
   "/",
   authenticate,
   authorize("products.read"),
+  validateQuery(productQuerySchema),
   controller.getAll.bind(controller)
 );
 

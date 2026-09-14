@@ -50,11 +50,15 @@ export class DashboardController {
             : undefined;
         const from = req.query.from;
         const to = req.query.to;
+        const limit = req.query.limit
+            ? Number(req.query.limit)
+            : undefined;
         const orders = await this.dashboardService.getOrders({
             status,
             customerId,
             from,
             to,
+            limit,
         });
         return res.status(200).json({
             success: true,
@@ -68,11 +72,15 @@ export class DashboardController {
             : undefined;
         const from = req.query.from;
         const to = req.query.to;
+        const limit = req.query.limit
+            ? Number(req.query.limit)
+            : undefined;
         const deliveries = await this.dashboardService.getDeliveries({
             status,
             customerId,
             from,
             to,
+            limit,
         });
         return res.status(200).json({
             success: true,

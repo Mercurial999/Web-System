@@ -32,6 +32,7 @@ async getOrders(filters?: {
   customerId?: number;
   from?: string;
   to?: string;
+  limit?: number;
 }) {
   return this.dashboardRepository.getOrders(filters);
 }
@@ -41,6 +42,7 @@ async getDeliveries(filters?: {
   customerId?: number;
   from?: string;
   to?: string;
+  limit?: number;
 }) {
   return this.dashboardRepository.getDeliveries(filters);
 }

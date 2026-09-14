@@ -12,21 +12,29 @@ export class ProductController {
   ) {}
 
   async getAll(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      const products =
-        await this.productService.getAllProducts();
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const status =
+      req.query.status === "ACTIVE" ||
+      req.query.status === "INACTIVE"
+        ? req.query.status
+        : undefined;
 
-      res.status(200).json({
-        success: true,
-        data: products,
-      });
-    } catch (error) {
-      next(error);
-    }
+    const products =
+      await this.productService.getAllProducts(
+        status
+      );
+
+    res.status(200).json({
+      success: true,
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
   }
 
   async getById(

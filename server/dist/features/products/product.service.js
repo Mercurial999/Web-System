@@ -5,8 +5,8 @@ export class ProductService {
     constructor(productRepository = new ProductRepository()) {
         this.productRepository = productRepository;
     }
-    async getAllProducts() {
-        return this.productRepository.findAll();
+    async getAllProducts(status) {
+        return this.productRepository.findAll(status);
     }
     async getProductById(id) {
         const product = await this.productRepository.findById(id);

@@ -48,3 +48,9 @@ export const updateProductSchema = z.object({
     .enum(["ACTIVE", "INACTIVE"])
     .optional(),
 });
+
+export const productQuerySchema = z.object({
+  status: z
+    .enum(["ACTIVE", "INACTIVE"])
+    .optional(),
+});

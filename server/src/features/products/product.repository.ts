@@ -1,13 +1,18 @@
 import { prisma } from "../../database/prisma.js";
 
 export class ProductRepository {
-  async findAll() {
-    return prisma.product.findMany({
-      orderBy: {
-        name: "asc",
-      },
-    });
-  }
+  async findAll(status?: "ACTIVE" | "INACTIVE") {
+  return prisma.product.findMany({
+    where: status
+      ? {
+          status,
+        }
+      : undefined,
+    orderBy: {
+      name: "asc",
+    },
+  });
+}
 
   async findById(id: number) {
     return prisma.product.findUnique({

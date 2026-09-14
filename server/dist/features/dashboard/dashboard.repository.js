@@ -192,9 +192,14 @@ export class DashboardRepository {
     }
     async getRecentOrders() {
         const orders = await prisma.order.findMany({
-            orderBy: {
-                orderDate: "desc",
-            },
+            orderBy: [
+                {
+                    orderDate: "desc",
+                },
+                {
+                    id: "desc",
+                },
+            ],
             take: 10,
             select: {
                 id: true,
@@ -258,10 +263,15 @@ export class DashboardRepository {
                     }
                     : {}),
             },
-            orderBy: {
-                orderDate: "desc",
-            },
-            take: 50,
+            orderBy: [
+                {
+                    orderDate: "desc",
+                },
+                {
+                    id: "desc",
+                },
+            ],
+            take: filters?.limit ?? 50,
             select: {
                 id: true,
                 orderDate: true,
@@ -324,10 +334,15 @@ export class DashboardRepository {
                     }
                     : {}),
             },
-            orderBy: {
-                deliveryDate: "desc",
-            },
-            take: 50,
+            orderBy: [
+                {
+                    deliveryDate: "desc",
+                },
+                {
+                    id: "desc",
+                },
+            ],
+            take: filters?.limit ?? 50,
             select: {
                 id: true,
                 deliveryDate: true,
@@ -356,9 +371,14 @@ export class DashboardRepository {
     }
     async getRecentDeliveries() {
         const deliveries = await prisma.delivery.findMany({
-            orderBy: {
-                deliveryDate: "desc",
-            },
+            orderBy: [
+                {
+                    deliveryDate: "desc",
+                },
+                {
+                    id: "desc",
+                },
+            ],
             take: 10,
             select: {
                 id: true,

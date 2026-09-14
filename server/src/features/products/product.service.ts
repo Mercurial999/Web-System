@@ -6,8 +6,10 @@ export class ProductService {
     private readonly productRepository = new ProductRepository()
   ) {}
 
-  async getAllProducts() {
-    return this.productRepository.findAll();
+  async getAllProducts(
+  status?: "ACTIVE" | "INACTIVE"
+    ) {
+    return this.productRepository.findAll(status);
   }
 
   async getProductById(id: number) {

@@ -6,7 +6,11 @@ export class ProductController {
     }
     async getAll(req, res, next) {
         try {
-            const products = await this.productService.getAllProducts();
+            const status = req.query.status === "ACTIVE" ||
+                req.query.status === "INACTIVE"
+                ? req.query.status
+                : undefined;
+            const products = await this.productService.getAllProducts(status);
             res.status(200).json({
                 success: true,
                 data: products,

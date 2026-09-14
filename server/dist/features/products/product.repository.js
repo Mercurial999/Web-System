@@ -1,7 +1,12 @@
 import { prisma } from "../../database/prisma.js";
 export class ProductRepository {
-    async findAll() {
+    async findAll(status) {
         return prisma.product.findMany({
+            where: status
+                ? {
+                    status,
+                }
+                : undefined,
             orderBy: {
                 name: "asc",
             },

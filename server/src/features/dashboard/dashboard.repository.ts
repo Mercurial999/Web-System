@@ -248,9 +248,14 @@ async getProductsInDemand() {
 
 async getRecentOrders() {
   const orders = await prisma.order.findMany({
-    orderBy: {
-      orderDate: "desc",
-    },
+    orderBy: [
+      {
+        orderDate: "desc",
+      },
+        {
+          id: "desc",
+        },
+    ],
     take: 10,
     select: {
       id: true,
@@ -289,6 +294,7 @@ async getOrders(filters?: {
   customerId?: number;
   from?: string;
   to?: string;
+  limit?: number;
 }) {
   const toDate = filters?.to
   ? new Date(`${filters.to}T00:00:00.000Z`)
@@ -333,11 +339,16 @@ async getOrders(filters?: {
         : {}),
     },
 
-    orderBy: {
-      orderDate: "desc",
-    },
+    orderBy: [
+        {
+          orderDate: "desc",
+        },
+        {
+          id: "desc",
+        },
+    ],
 
-    take: 50,
+    take: filters?.limit ?? 50,
 
     select: {
       id: true,
@@ -378,6 +389,7 @@ async getDeliveries(filters?: {
   customerId?: number;
   from?: string;
   to?: string;
+  limit?: number;
 }) {
   const toDate = filters?.to
     ? new Date(`${filters.to}T00:00:00.000Z`)
@@ -422,11 +434,16 @@ async getDeliveries(filters?: {
         : {}),
     },
 
-    orderBy: {
-      deliveryDate: "desc",
-    },
+      orderBy: [
+        {
+          deliveryDate: "desc",
+        },
+          {
+            id: "desc",
+          },
+      ],
 
-    take: 50,
+    take: filters?.limit ?? 50,
 
     select: {
       id: true,
@@ -464,9 +481,14 @@ async getDeliveries(filters?: {
 
 async getRecentDeliveries() {
   const deliveries = await prisma.delivery.findMany({
-    orderBy: {
-      deliveryDate: "desc",
-    },
+    orderBy: [
+        {
+          deliveryDate: "desc",
+        },
+        {
+          id: "desc",
+        },
+    ],
     take: 10,
     select: {
       id: true,

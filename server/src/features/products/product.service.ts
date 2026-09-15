@@ -1,5 +1,8 @@
 import { ProductRepository } from "./product.repository.js";
-import { AppError } from "../../shared/errors/index.js";
+import {
+  AppError,
+  ValidationError,
+} from "../../shared/errors/index.js";
 
 export class ProductService {
   constructor(
@@ -13,13 +16,18 @@ export class ProductService {
   }
 
   async getProductById(id: number) {
-    const product = await this.productRepository.findById(id);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new ValidationError("Invalid product ID.");
+  }
 
-    if (!product) {
-      throw new AppError("Product not found.", 404);
-    }
+  const product = await this.productRepository.findById(id);
 
-    return product;
+  if (!product) {
+    throw new AppError("Product not found.", 404);
+  }
+
+  return product;
+  
   }
 
   async createProduct(data: {

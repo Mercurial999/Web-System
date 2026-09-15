@@ -1,24 +1,24 @@
 import { stockMovementRepository } from "./stock-movement.repository.js";
 import { inventoryRepository } from "../inventory/inventory.repository.js";
 import { productRepository } from "../products/product.repository.js";
-import { AppError } from "../../shared/errors/index.js";
+import { ValidationError, NotFoundError, } from "../../shared/errors/index.js";
 import { prisma } from "../../database/prisma.js";
 export class StockMovementService {
     async createMovement(data) {
         if (data.quantity <= 0) {
-            throw new AppError("Movement quantity must be greater than zero.", 400);
+            throw new ValidationError("Movement quantity must be greater than zero.");
         }
         const movement = await prisma.$transaction(async (tx) => {
             const inventory = await inventoryRepository.findForUpdate(data.inventoryId, tx);
             if (!inventory) {
-                throw new AppError("Inventory not found.", 404);
+                throw new NotFoundError("Inventory not found.");
             }
             const product = await productRepository.findById(inventory.productId);
             if (!product) {
-                throw new AppError("Product not found.", 404);
+                throw new NotFoundError("Product not found.");
             }
             if (product.status === "INACTIVE") {
-                throw new AppError("Cannot create stock movement for an inactive product.", 400);
+                throw new ValidationError("Cannot create stock movement for an inactive product.");
             }
             const currentQuantity = Number(inventory.quantity);
             let newQuantity;
@@ -30,7 +30,7 @@ export class StockMovementService {
                 newQuantity =
                     currentQuantity - data.quantity;
                 if (newQuantity < 0) {
-                    throw new AppError("Insufficient inventory quantity.", 400);
+                    throw new ValidationError("Insufficient inventory quantity.");
                 }
             }
             else {
@@ -48,16 +48,23 @@ export class StockMovementService {
         return stockMovementRepository.findAll();
     }
     async getMovementById(id) {
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new ValidationError("Invalid stock movement ID.");
+        }
         const movement = await stockMovementRepository.findById(id);
         if (!movement) {
-            throw new AppError("Stock movement not found.", 404);
+            throw new NotFoundError("Stock movement not found.");
         }
         return movement;
     }
     async getMovementsByInventoryId(inventoryId) {
+        if (!Number.isInteger(inventoryId) ||
+            inventoryId <= 0) {
+            throw new ValidationError("Invalid inventory ID.");
+        }
         const inventory = await inventoryRepository.findById(inventoryId);
         if (!inventory) {
-            throw new AppError("Inventory not found.", 404);
+            throw new NotFoundError("Inventory not found.");
         }
         return stockMovementRepository.findByInventoryId(inventoryId);
     }

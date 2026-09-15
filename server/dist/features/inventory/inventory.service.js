@@ -1,6 +1,6 @@
 import { inventoryRepository } from "./inventory.repository.js";
 import { productRepository } from "../products/product.repository.js";
-import { AppError } from "../../shared/errors/AppError.js";
+import { ConflictError, NotFoundError, ValidationError, } from "../../shared/errors/index.js";
 export class InventoryService {
     async getAllInventory() {
         const inventory = await inventoryRepository.findAll();
@@ -16,9 +16,12 @@ export class InventoryService {
         }));
     }
     async getInventoryById(id) {
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new ValidationError("Invalid inventory ID.");
+        }
         const inventory = await inventoryRepository.findById(id);
         if (!inventory) {
-            throw new Error("Inventory record not found.");
+            throw new NotFoundError("Inventory not found.");
         }
         return {
             id: inventory.id,
@@ -35,47 +38,47 @@ export class InventoryService {
         // Business rule 1:
         // Quantity cannot be negative.
         if (data.quantity < 0) {
-            throw new Error("Quantity cannot be negative.");
+            throw new ValidationError("Quantity cannot be negative.");
         }
         // Business rule 2:
         // Minimum stock cannot be negative.
         if (data.minimumStock < 0) {
-            throw new Error("Minimum stock cannot be negative.");
+            throw new ValidationError("Minimum stock cannot be negative.");
         }
         // Business rule 3:
         // Product must exist.
         const product = await productRepository.findById(data.productId);
         if (!product) {
-            throw new Error("Product not found.");
+            throw new NotFoundError("Product not found.");
         }
         // Business rule 4:
         // Product must be active.
         if (product.status !== "ACTIVE") {
-            throw new AppError("Cannot create inventory for an inactive product.", 409);
+            throw new ConflictError("Cannot create inventory for an inactive product.");
         }
         // Business rule 5:
         // Product can have only one inventory record.
         const existingInventory = await inventoryRepository.findByProductId(data.productId);
         if (existingInventory) {
-            throw new AppError("Inventory already exists for this product.", 409);
+            throw new ConflictError("Inventory already exists for this product.");
         }
         return inventoryRepository.create(data);
     }
     async updateInventory(id, data) {
-        // Make sure the inventory exists.
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new ValidationError("Invalid inventory ID.");
+        }
         const inventory = await inventoryRepository.findById(id);
         if (!inventory) {
-            throw new Error("Inventory record not found.");
+            throw new NotFoundError("Inventory not found.");
         }
-        // Validate quantity if provided.
         if (data.quantity !== undefined &&
             data.quantity < 0) {
-            throw new Error("Quantity cannot be negative.");
+            throw new ValidationError("Quantity cannot be negative.");
         }
-        // Validate minimum stock if provided.
         if (data.minimumStock !== undefined &&
             data.minimumStock < 0) {
-            throw new Error("Minimum stock cannot be negative.");
+            throw new ValidationError("Minimum stock cannot be negative.");
         }
         return inventoryRepository.update(id, data);
     }

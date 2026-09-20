@@ -1,12 +1,18 @@
+import { useAuth } from "../../context/useAuth";
+
 function Header() {
+  const { user } = useAuth();
+
   return (
     <header className="header">
       <div>
-        <h1>Bakery Distribution Management System</h1>
+        <p className="header-kicker">Bakery Distribution Management System</p>
+        <h1>Operations workspace</h1>
       </div>
 
       <div className="header-user">
-        <span>Administrator</span>
+        <strong>{user ? `${user.firstName} ${user.lastName}` : "User"}</strong>
+        <span>{user?.role.name ?? ""}</span>
       </div>
     </header>
   );

@@ -8,8 +8,15 @@ import customerRoutes from "./features/customers/customer.routes.js";
 import deliveryRoutes from "./features/deliveries/delivery.routes.js";
 import orderRoutes from "./features/orders/order.routes.js";
 import dashboardRoutes from "./features/dashboard/dashboard.routes.js";
+import cors from "cors";
 import { errorMiddleware } from "./middleware/error.middleware.js";
 const app = express();
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:5174",
+    ],
+}));
 app.use(express.json());
 app.get("/", (req, res) => {
     res.send("Inventory System Backend is running!");

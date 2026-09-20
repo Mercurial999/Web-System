@@ -1,9 +1,22 @@
+export interface AuthRole {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AuthUser {
   id: number;
+  roleId: number;
   firstName: string;
   lastName: string;
   email: string;
-  roleId: number;
+  phone: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  role: AuthRole;
 }
 
 export interface LoginCredentials {
@@ -18,4 +31,9 @@ export interface LoginResponse {
     token: string;
     user: AuthUser;
   };
+}
+
+export interface PermissionsResponse {
+  success: boolean;
+  data: string[];
 }

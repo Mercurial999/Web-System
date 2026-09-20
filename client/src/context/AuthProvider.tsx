@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -11,6 +12,7 @@ import {
   setStoredUser,
   setToken,
 } from "../lib/storage";
+import { getPermissions } from "../services/authService";
 
 import type { AuthUser } from "../types/auth.types";
 
@@ -26,6 +28,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(() =>
     getStoredUser<AuthUser>(),
   );
+  const [permissions, setPermissions] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (token) {
+      void getPermissions().then(setPermissions).catch(() => setPermissions([]));
+    }
+  }, [token]);
 
   function login(newToken: string, newUser: AuthUser): void {
     setToken(newToken);
@@ -33,6 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     setAuthToken(newToken);
     setUser(newUser);
+    void getPermissions().then(setPermissions).catch(() => setPermissions([]));
   }
 
   function logout(): void {
@@ -40,6 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     setAuthToken(null);
     setUser(null);
+    setPermissions([]);
   }
 
   const isAuthenticated = Boolean(token);
@@ -51,8 +62,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isAuthenticated,
       login,
       logout,
+      permissions,
+      hasPermission: (permission: string) => permissions.includes(permission),
     }),
-    [user, token, isAuthenticated],
+    [user, token, isAuthenticated, permissions],
   );
 
   return (

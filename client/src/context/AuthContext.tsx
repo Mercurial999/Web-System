@@ -8,8 +8,9 @@ export interface AuthContextValue {
   isAuthenticated: boolean;
   login: (token: string, user: AuthUser) => void;
   logout: () => void;
+  permissions: string[];
+  hasPermission: (permission: string) => boolean;
 }
 
-export const AuthContext = createContext<AuthContextValue | undefined>(
-  undefined,
-);
+export const AuthContext =
+  createContext<AuthContextValue | undefined>(undefined);

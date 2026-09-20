@@ -10,7 +10,7 @@ function DashboardLayout() {
       <div className="dashboard-main">
         <Header />
 
-        <main className="dashboard-content">
+        <main className="dashboard-content" id="main-content">
           <Outlet />
         </main>
       </div>

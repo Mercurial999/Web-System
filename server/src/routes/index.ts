@@ -4,6 +4,8 @@ import { userRoutes } from "../features/users/index.js";
 import { roleRoutes } from "../features/roles/index.js";
 import { authRoutes } from "../features/auth/index.js";
 import { permissionRoutes } from "../features/permissions/index.js";
+import { salesRoutes } from "../features/sales/index.js";
+import reportsRoutes from "../features/reports/reports.routes.js";
 
 const router = Router();
 
@@ -14,5 +16,9 @@ router.use("/roles", roleRoutes);
 router.use("/auth", authRoutes);
 
 router.use("/permissions", permissionRoutes);
+
+router.use("/sales", salesRoutes);
+
+router.use("/reports", reportsRoutes);
 
 export default router;

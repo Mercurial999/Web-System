@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import { authConfig } from "../config/auth.js";
 import { AppError } from "../shared/errors/AppError.js";
-export function authenticate(req, _res, next) {
+import { userRepository } from "../features/users/user.repository.js";
+export async function authenticate(req, _res, next) {
     try {
         const authorization = req.headers.authorization;
         if (!authorization) {
@@ -19,10 +20,17 @@ export function authenticate(req, _res, next) {
             typeof payload.role !== "string") {
             throw new AppError("Invalid authentication token.", 401);
         }
+        const user = await userRepository.findById(payload.userId);
+        if (!user) {
+            throw new AppError("User account no longer exists.", 401);
+        }
+        if (user.status !== "ACTIVE") {
+            throw new AppError("Your account is inactive.", 403);
+        }
         req.user = {
-            userId: payload.userId,
-            roleId: payload.roleId,
-            role: payload.role,
+            userId: user.id,
+            roleId: user.roleId,
+            role: user.role.name,
         };
         next();
     }

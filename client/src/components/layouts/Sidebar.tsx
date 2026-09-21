@@ -38,6 +38,11 @@ const navigationItems = [
     permission: "deliveries.read",
   },
   {
+    label: "Sales",
+    path: "/sales",
+    permission: "reports.read",
+  },
+  {
     label: "Reports",
     path: "/reports",
     permission: "reports.read",

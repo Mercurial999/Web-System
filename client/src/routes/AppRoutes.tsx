@@ -11,6 +11,7 @@ import ReportsPage from "../pages/reports/ReportsPage";
 import RolesPage from "../pages/roles/RolesPage";
 import UsersPage from "../pages/users/UsersPage";
 import ProductsPage from "../pages/products/ProductsPage";
+import SalesPage from "../pages/sales/SalesPage";
 
 import ProtectedRoutes from "./ProtectedRoutes";
 
@@ -32,6 +33,7 @@ function AppRoutes() {
             <Route path="inventory" element={<InventoryPage />} />
             <Route path="customers" element={<CustomersPage />} />
             <Route path="deliveries" element={<DeliveriesPage />} />
+            <Route path="sales" element={<SalesPage />} />
             <Route path="reports" element={<ReportsPage />} />
           </Route>
         </Route>
